@@ -1,7 +1,7 @@
 import { useFilterController } from "./ListingFilterCore";
 import { TextField, TextFieldProps } from "@mui/material";
 import useDebounce from "../hooks/useDebounce";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TFilter } from "../types";
 
 export default function ListingSearchBar<T extends object>({
@@ -12,13 +12,13 @@ export default function ListingSearchBar<T extends object>({
   queryFunc: (v: string) => TFilter<T>;
   name: string;
 } & TextFieldProps) {
-  const { onChange, resetFilter } = useFilterController<T, string>({
+  const [search, setSearch] = useState("");
+  useDebounce(search, (v) => (v === "" ? resetFilter() : onChange(v)));
+  const { onChange, resetFilter, value } = useFilterController<T, string>({
     queryFunc,
     name,
   });
-
-  const [search, setSearch] = useState("");
-  useDebounce(search, (v) => (v === "" ? resetFilter() : onChange(v)));
+  useEffect(() => setSearch(value || ""), [value]);
 
   return (
     <React.Fragment>

@@ -7,7 +7,7 @@ import {
   FormGroup,
   Checkbox,
 } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 
 export default function ListingMultiSelect<T extends object>({
   options,
@@ -18,21 +18,24 @@ export default function ListingMultiSelect<T extends object>({
   title: string;
   name: string;
 }) {
-  const { value, onChange, resetFilter } = useFilterController<T, string[]>({
-    queryFunc: getDropdownQuery,
-    name,
-  });
-
-  const bucketValue = value || [];
-
-  function getDropdownQuery(v: string[]) {
-    if (v.length === 0) resetFilter();
+  const getDropdownQuery = useCallback((v: string[]) => {
     return {
       and: options
         .filter(({ value }) => v.includes(value))
         .map(({ query }) => query),
     };
-  }
+  }, []);
+
+  const { value, onChange, resetFilter } = useFilterController<T, string[]>({
+    queryFunc: getDropdownQuery,
+    name,
+  });
+
+  useEffect(() => {
+    if (value?.length === 0) resetFilter();
+  }, [value]);
+
+  const bucketValue = value || [];
 
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
@@ -48,11 +51,11 @@ export default function ListingMultiSelect<T extends object>({
               <Checkbox
                 checked={bucketValue?.includes(v)}
                 name={label}
-                onChange={() =>
-                  bucketValue?.includes(v)
-                    ? onChange(bucketValue?.filter((f: string) => f !== v))
-                    : onChange([...bucketValue, v])
-                }
+                onChange={() => {
+                  if (bucketValue?.includes(v))
+                    onChange(bucketValue?.filter((f: string) => f !== v));
+                  else onChange([...bucketValue, v]);
+                }}
               />
             }
           />

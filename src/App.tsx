@@ -1,5 +1,5 @@
 import React from "react";
-import Home from "./packages/Listing/Sample";
+import Home from "./Sample";
 import "./index.css";
 
 function App() {

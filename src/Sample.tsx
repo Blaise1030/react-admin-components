@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import ListingAdvanceFilters from "./components/ListingAdvanceFilters";
-import Listing from "./components/ListingComponent";
-import ListingFilterDisplay from "./components/ListingFilterDisplay";
-import ListingProvider from "./components/ListingProvider";
-import ListingSearchBar from "./components/ListingSearchBar";
-import { TQueryListFunc } from "./types";
+import ListingAdvanceFilters from "./packages/Listing/components/ListingAdvanceFilters";
+import Listing from "./packages/Listing/components/ListingComponent";
+import ListingFilterDisplay from "./packages/Listing/components/ListingFilterDisplay";
+import ListingProvider from "./packages/Listing/components/ListingProvider";
+import ListingSearchBar from "./packages/Listing/components/ListingSearchBar";
+import { TQueryListFunc } from "./packages/Listing/types";
 import {
   Container,
   Box,
@@ -13,6 +13,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { ListingFilterDropdown, ListingMultiSelect } from "./packages/Listing";
 
 export default function Home() {
   const queryFunction: TQueryListFunc<TProduct> = useCallback(
@@ -60,19 +61,21 @@ export default function Home() {
               sx={{ width: "100%" }}
               spacing={1}
             >
-              <ListingSearchBar<TProduct>
-                queryFunc={(v: string) => ({ title: { eq: v } })}
-                placeholder="Search Name"
-                name="search-name"
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              <Stack direction={"row"} spacing={2}>
+                <ListingSearchBar<TProduct>
+                  queryFunc={(v: string) => ({ title: { eq: v } })}
+                  placeholder="Search Name"
+                  name="search-name"
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Stack>
               <ListingAdvanceFilters>
                 <ListingSearchBar<TProduct>
                   queryFunc={(v: string) => ({ title: { eq: v } })}
@@ -80,9 +83,45 @@ export default function Home() {
                   name="search-name1"
                   size="small"
                 />
+                <ListingMultiSelect
+                  name={"filtername"}
+                  title={"Category"}
+                  options={[
+                    {
+                      query: { title: { eq: "phone" } },
+                      label: "Phones",
+                      value: "1",
+                    },
+                    {
+                      query: { title: { eq: "laptop" } },
+                      label: "Laptops",
+                      value: "2",
+                    },
+                  ]}
+                />
+                <ListingFilterDropdown
+                  name={"dropdown"}
+                  title={"Category"}
+                  size="small"
+                  options={[
+                    {
+                      query: { title: { eq: "phone" } },
+                      label: "Phones",
+                      value: "1",
+                    },
+                    {
+                      query: { title: { eq: "laptop" } },
+                      label: "Laptops",
+                      value: "2",
+                    },
+                  ]}
+                />
               </ListingAdvanceFilters>
             </Stack>
-            <ListingFilterDisplay />
+            <ListingFilterDisplay
+              operationMap={{ eq: "equals" }}
+              labelMap={{ title: "Title" }}
+            />
             <Box sx={{ height: "75vh", backgroundColor: "white" }}>
               <Listing<TProduct>
                 listingKey={"product listing"}

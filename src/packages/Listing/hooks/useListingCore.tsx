@@ -37,7 +37,7 @@ export function useListingCore<T extends object>({
     },
   });
 
-  return {
+  const hello = {
     setSortModel,
     sortModel,
     isLoading,
@@ -47,4 +47,5 @@ export function useListingCore<T extends object>({
     page,
     data,
   };
+  return hello;
 }

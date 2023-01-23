@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# Getting Started with React Admin Components
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a component library that aims to simplify the creation of admin panels and dashboards. This library aims to build ontop of other popular open source libraries namely Material UI, Tanstack Query, React Hook Forms and others.
 
-## Available Scripts
+####Usage
 
-In the project directory, you can run:
+Wrap the root of the application with Tanstack Query provider
 
-### `npm start`
+```jsx
+const queryClient = new QueryClient();
+<QueryClientProvider client={queryClient}>
+  // You root of app here
+</QueryClientProvider>;
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+####Listings
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```jsx
+<ListingProvider>
 
-### `npm test`
+    // Filters
+    <ListingSearchBar />
+    <ListingMultiSelect />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    // Actual Listing
+    <Listing>
 
-### `npm run build`
+</ListingProvider>
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`ListingProvider` is a context that manages the filters for the listing page and pass the filters for the `<Listing />`. Pagination is being handled under the `Listing` component.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Please check the [here](/src/Sample.tsx) for the basic usage. The system is strongly typed for developers to strongly understand what Resource that we are working on.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Sample:
 
-### `npm run eject`
+![Sample Image](/src/assets/demo.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Provided Components
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. ListingAdvanceFilter
+   A side bar drawer where is holds different filters components.
+   ![Sample Image](/src/assets/AdvanceFilters.png)
+2. ListingFilterDisplay
+   Displays the applied filters. The filters can be canceled and reset
+   ![Sample Image](/src/assets/FilterDisplayer.png)
+3. ListingFilterDropdown
+   Select one filter
+   ![Sample Image](/src/assets/Dropdown.png)
+4. ListingMultiSelect
+   Select multiple filter
+   ![Sample Image](/src/assets/Multifilter.png)
+5. ListingSearchBar
+   Search bar
+   ![Sample Image](/src/assets/SearchBar.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Check the Generated filters formats [here](/src/packages/Listing/types.ts). This format can be transformed to the shape that you want
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+##### Headless Usage
 
-## Learn More
+To create your own filter component
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```jsx
+    const { value: V, onChange: (value:V) => void, resetFilter: ()=> void } = useFilterController<T, V>({
+        queryFunc: (v: T) => TFilter<T>,
+        name: string,
+  });
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+To create your own listing component just use this hook
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```jsx
+    function useListingCore<T>({
+        queryFunc: TQueryListFunc<T>;
+        columns: GridColumns<T>;
+        defaultLimit?: number;
+        listingKey: string;
+        onSuccess?: (data: {
+            nextToken: string;
+            total: number;
+            items: T[];
+        }) => void;
+    }) => ({
+        setSortModel: React.Dispatch<React.SetStateAction<GridSortItem[]>>;
+        setLimit: React.Dispatch<React.SetStateAction<number>>;
+        setPage: React.Dispatch<React.SetStateAction<number>>;
+        sortModel: GridSortItem[];
+        isLoading: boolean;
+        limit: number;
+        page: number;
+        data: any;
+    })
+```
