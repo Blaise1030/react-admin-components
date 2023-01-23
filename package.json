@@ -1,6 +1,6 @@
 {
   "name": "define-react-admin-components",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": false,
   "files": [
     "dist"
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc --module CommonJS",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
