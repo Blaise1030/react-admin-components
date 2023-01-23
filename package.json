@@ -6,6 +6,10 @@
     "dist"
   ],
   "main": "dist/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Blaise1030/react-admin-components.git"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
