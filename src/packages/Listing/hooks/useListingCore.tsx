@@ -1,9 +1,12 @@
 import { useListingFilterProvider } from "../components/ListingFilterCore";
 import { GridColumns, GridSortItem } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { TQueryListFunc } from "../types";
 import { useState } from "react";
-
 export function useListingCore<T extends object>({
   defaultLimit,
   listingKey,
