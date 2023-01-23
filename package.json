@@ -1,11 +1,11 @@
 {
   "name": "react-admin-components",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
+  "main": "dist/index.ts",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -34,7 +34,7 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "prepare": "npm run dist",
-    "dist": "rm -rf dist/* && babel src/ --out-dir dist --copy-files --no-copy-ignored --ignore src/**/*.stories.js"
+    "dist": "rm -rf dist/* && babel src/packages --out-dir dist --copy-files --no-copy-ignored --ignore src/**/*.stories.js"
   },
   "eslintConfig": {
     "extends": [
@@ -76,6 +76,7 @@
     "@storybook/react": "^6.5.15",
     "@storybook/testing-library": "0.0.13",
     "@tsconfig/create-react-app": "^1.0.3",
+    "babel-cli": "^6.26.0",
     "babel-plugin-named-exports-order": "0.0.2",
     "prop-types": "^15.8.1",
     "webpack": "^5.75.0"
